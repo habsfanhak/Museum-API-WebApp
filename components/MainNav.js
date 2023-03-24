@@ -10,7 +10,7 @@ import InputGroup from 'react-bootstrap/InputGroup';
 
 export default function MainNav()
 {
-    const [isExpanded, setExpanded] = useState(false)
+    const [isExpanded, setExpanded] = useState(true)
     const router = useRouter()
     const { register, handleSubmit } = useForm({
         defaultValues: {
