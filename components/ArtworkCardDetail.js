@@ -3,11 +3,31 @@ import Error from 'next/error';
 import Card from 'react-bootstrap/Card';
 import Link from 'next/link'
 import Button from 'react-bootstrap/Button';
+import { useAtom } from 'jotai';
+import { favouritesAtom } from '@/store';
+import {useState, useEffect} from 'react'
+
 
 export default function ArtworkCardDetail(props)
 {
+    //const { data, error } = useSWR(`https://collectionapi.metmuseum.org/public/collection/v1/objects/${props.objectID}`);
+    const { data, error } = useSWR(props.objectID ? `https://collectionapi.metmuseum.org/public/collection/v1/objects/${props.objectID}` : null);
+    const [favouritesList, setFavouritesList] = useAtom(favouritesAtom)
+    const [showAdded, setShowAdded] = useState(favouritesList.includes(props.objectID))
 
-    const { data, error } = useSWR(`https://collectionapi.metmuseum.org/public/collection/v1/objects/${props.objectID}`);
+    function favouritesClicked()
+    {
+        if (showAdded == true)
+        {
+            setFavouritesList(current => current.filter(fav => fav != props.objectID));
+            setShowAdded(false)
+        }
+        else
+        {
+            setFavouritesList(current => [...current, props.objectID]);
+            setShowAdded(true)
+        }
+    }
 
     if (error)
     {
@@ -53,6 +73,10 @@ export default function ArtworkCardDetail(props)
                             <strong>Credit Line: </strong>{data.creditLine}<br/>
                             <strong>Dimensions: </strong>{data.dimensions}<br/>
                         </Card.Text>
+                        <Button variant={showAdded ? "primary" : "outline-primary"} onClick={favouritesClicked}>
+                            {showAdded ? "+ Favourite Added" : "+ Favourite"}
+                        </Button>
+                        <br />
                         <Link style={{paddingLeft: '20px' }} href={`/artwork/${props.objectID}`} passHref><Button variant="primary">ID: {props.objectID}</Button></Link> <br/>
                     </Card>
                 </>

@@ -4,10 +4,13 @@ import Row from 'react-bootstrap/Row'
 import Button from 'react-bootstrap/Button';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
+import { searchHistoryAtom } from '@/store';
+import { useAtom } from 'jotai';
 
 export default function Search()
 {
     const router = useRouter()
+    const [searchHistory, setSearchHistory] = useAtom(searchHistoryAtom)
     const { register, handleSubmit } = useForm({
         defaultValues: {
             q: '',
@@ -21,6 +24,7 @@ export default function Search()
 
     function submitForm(data)
     {
+
         var queryString = `artwork?${data.searchBy}=true`
 
         if (data.geolocation)
@@ -34,7 +38,8 @@ export default function Search()
         }
 
         queryString += `&isOnView=${data.isOnView}&isHighlight=${data.isHighlight}&q=${data.q}`
-
+        setSearchHistory(current => [...current, queryString]);
+        
         router.push(queryString)
         
     }
