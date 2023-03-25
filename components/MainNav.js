@@ -7,10 +7,14 @@ import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
 import Button from 'react-bootstrap/Button';
 import InputGroup from 'react-bootstrap/InputGroup';
+import NavDropdown from 'react-bootstrap/NavDropdown';
+import { searchHistoryAtom } from '@/store';
+import { useAtom } from 'jotai';
 
 export default function MainNav()
 {
-    const [isExpanded, setExpanded] = useState(true)
+    const [isExpanded, setExpanded] = useState(false)
+    const [searchHistory, setSearchHistory] = useAtom(searchHistoryAtom)
     const router = useRouter()
     const { register, handleSubmit } = useForm({
         defaultValues: {
@@ -20,7 +24,9 @@ export default function MainNav()
 
     function submitForm(data)
     {
-        router.push(`/artwork?title=true&q=${data.searchField}`)
+        let queryString = `/artwork?title=true&q=${data.searchField}`
+        router.push(queryString)
+        setSearchHistory(current => [...current, queryString]);
         setExpanded(false)
     }
 
@@ -34,8 +40,10 @@ export default function MainNav()
         <>
             <Navbar bg="light" className="fixed-top" expand="lg" expanded={isExpanded}>
                 <Navbar.Brand className="px-4">Hayat Khan</Navbar.Brand>
-                <Link href="/" passHref legacyBehavior><Nav.Link>Home</Nav.Link></Link>
-                <Link href="/search" passHref legacyBehavior><Nav.Link className="px-4">Advanced Search</Nav.Link></Link>
+                <Link href="/" passHref legacyBehavior>
+                    <Nav.Link active={router.pathname === "/"} activeClassName="active-link">Home</Nav.Link>
+                </Link>
+                <Link href="/search" passHref legacyBehavior><Nav.Link active={router.pathname === "/search"} className="px-4">Advanced Search</Nav.Link></Link>
                 <Navbar.Toggle aria-controls="navbar-nav" onClick={inverseExpanded}/>
                 <Navbar.Collapse id="navbar-nav" className="justify-content-end">
                     <Form onSubmit={handleSubmit(submitForm)} display="flex">
@@ -44,6 +52,12 @@ export default function MainNav()
                             <Button variant="primary" type="submit">Submit</Button>
                         </InputGroup>
                     </Form>
+                    <Nav>
+                        <NavDropdown title="User Name" id="basic-nav-dropdown">
+                            <Link href="/favourites" passHref legacyBehavior><NavDropdown.Item active={router.pathname === "/favourites"} onclick={inverseExpanded}>Favourites</NavDropdown.Item></Link>
+                            <Link href="/history" passHref legacyBehavior><NavDropdown.Item active={router.pathname === "/history"} onclick={inverseExpanded}>Search History</NavDropdown.Item></Link>
+                        </NavDropdown>
+                    </Nav>
                 </Navbar.Collapse>
             </Navbar>
         <br />
