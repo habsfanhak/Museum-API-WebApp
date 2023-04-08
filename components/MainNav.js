@@ -10,6 +10,7 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { searchHistoryAtom } from '@/store';
 import { useAtom } from 'jotai';
+import { addToHistory } from '@/lib/userData';
 
 export default function MainNav()
 {
@@ -22,11 +23,11 @@ export default function MainNav()
         },
       });
 
-    function submitForm(data)
+    async function submitForm(data)
     {
         let queryString = `/artwork?title=true&q=${data.searchField}`
         router.push(queryString)
-        setSearchHistory(current => [...current, queryString]);
+        setSearchHistory(await addToHistory(`title=true&q=${data.searchField}`)) 
         setExpanded(false)
     }
 
