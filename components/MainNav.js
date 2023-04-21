@@ -64,7 +64,7 @@ export default function MainNav()
                         </InputGroup>
                     </Form> }
                     {token && <Nav>
-                        <NavDropdown title={token.userName} id="basic-nav-dropdown">
+                        <NavDropdown title={token.userName} id="basic-nav-dropdown" style={{ minWidth: '175px' }}>
                             <Link href="/favourites" passHref legacyBehavior><NavDropdown.Item active={router.pathname === "/favourites"} onClick={inverseExpanded}>Favourites</NavDropdown.Item></Link>
                             <Link href="/history" passHref legacyBehavior><NavDropdown.Item active={router.pathname === "/history"} onClick={inverseExpanded}>Search History</NavDropdown.Item></Link>
                             <NavDropdown.Item  onClick={logout}>Logout</NavDropdown.Item>
