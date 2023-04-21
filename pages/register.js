@@ -48,7 +48,7 @@ export default function Login(props) {
         </Form.Group  >
 
         <Form.Group>
-          <Form.Label>Repeart Password:</Form.Label>
+          <Form.Label>Repeat Password:</Form.Label>
           <Form.Control type="password" value={password2} id="password2" name="password2" onChange={e => setPassword2(e.target.value)} />
         </Form.Group  >
 
